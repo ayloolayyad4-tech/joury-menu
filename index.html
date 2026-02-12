@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JouryRestaurant.com</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000; --panel:#0b0b0b; --panel2:#101010;
+      --gold:#c6a64b; --gold2:#d4af37;
+      --text:#fff; --muted:#cfcfcf; --line:#1f1f1f;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:"Tajawal",sans-serif;
+      background: radial-gradient(1000px 500px at 50% 0%, #111 0%, #000 60%);
+      color:var(--text);
+      text-align:center;
+    }
+
+    header{
+      padding:26px 14px 18px;
+      background:linear-gradient(180deg,#000 0%, #0a0a0a 100%);
+      border-bottom:1px solid var(--gold);
+    }
+    .logo{
+      width:150px;height:150px;object-fit:contain;display:block;margin:0 auto 10px;
+      filter: drop-shadow(0 0 25px rgba(198,166,75,.65));
+    }
+    .title{
+      margin:0; color:var(--gold);
+      font-size:38px; letter-spacing:3px;
+      text-shadow:0 0 14px rgba(198,166,75,.55);
+    }
+    .sub{margin:6px 0 0;color:var(--muted);font-size:13px}
+
+    .topbar{
+      position:sticky; top:0; z-index:50;
+      padding:10px 10px 12px;
+      background:rgba(0,0,0,.82);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid rgba(198,166,75,.35);
+    }
+    .barRow{
+      max-width:1100px; margin:0 auto;
+      display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;
+    }
+    .langBtn{
+      border:1px solid var(--gold);
+      background:#0f0f0f;
+      color:var(--gold);
+      padding:10px 14px;
+      border-radius:999px;
+      cursor:pointer;
+      transition:.25s;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .langBtn:hover,.langBtn.active{
+      background:var(--gold);
+      color:#000;
+      box-shadow:0 0 14px rgba(198,166,75,.45);
+    }
+    .tabs{
+      display:flex; gap:10px; overflow:auto;
+      padding:10px 4px 2px;
+      max-width:1100px; margin:0 auto;
+      scrollbar-width:thin;
+      justify-content:flex-start;
+    }
+    .tab{
+      flex:0 0 auto;
+      padding:10px 16px;
+      border-radius:999px;
+      border:1px solid var(--gold);
+      background:#0f0f0f;
+      color:var(--gold);
+      cursor:pointer;
+      transition:.25s;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .tab:hover,.tab.active{
+      background:var(--gold);
+      color:#000;
+      box-shadow:0 0 14px rgba(198,166,75,.45);
+    }
+
+    .wrap{max-width:1100px;margin:0 auto;padding:16px 12px 40px}
+
+    .hero{
+      border:1px solid rgba(198,166,75,.35);
+      border-radius:18px;
+      overflow:hidden;
+      background:#000;
+      box-shadow:0 0 24px rgba(0,0,0,.7);
+      margin:14px 0 16px;
+      text-align:right;
+    }
+    .hero img{width:100%;height:230px;object-fit:cover;display:block}
+    .heroTitle{
+      padding:12px 14px;
+      background:linear-gradient(180deg,#0b0b0b 0%, #070707 100%);
+      border-top:1px solid rgba(198,166,75,.18);
+      display:flex; justify-content:space-between; align-items:flex-end; gap:12px; flex-wrap:wrap;
+    }
+    .heroTitle h2{margin:0;color:var(--gold);font-size:22px;letter-spacing:1px}
+    .note{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+
+    .list{
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      background:linear-gradient(180deg,var(--panel) 0%, #070707 100%);
+      box-shadow:0 0 22px rgba(0,0,0,.7);
+      text-align:right;
+    }
+    .row{
+      display:flex; justify-content:space-between; gap:12px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      align-items:flex-start;
+    }
+    .row:last-child{border-bottom:none}
+    .itemName{margin:0;font-weight:700;font-size:15.5px;line-height:1.35}
+    .itemNote{margin:6px 0 0;color:var(--muted);font-size:12.5px;line-height:1.5}
+    .price{color:var(--gold2);font-weight:800;font-size:16px;white-space:nowrap}
+
+    .footer{border-top:1px solid rgba(198,166,75,.2);color:#bdbdbd;padding:22px 10px 30px;font-size:13px;margin-top:26px}
+  </style>
+</head>
+
+<body>
+  <header>
+    <img class="logo" src="logo.jpeg" alt="Joury Logo">
+    <h1 class="title" id="pageTitle">Joury Restaurant</h1>
+    <div class="sub" id="pageSub">Digital Menu</div>
+  </header>
+
+  <div class="topbar">
+    <div class="barRow">
+      <button class="langBtn active" id="btnAr" onclick="setLang('ar')">عربي</button>
+      <button class="langBtn" id="btnHe" onclick="setLang('he')">עברית</button>
+    </div>
+    <div class="tabs" id="tabs"></div>
+  </div>
+
+  <main class="wrap">
+    <div class="hero" id="hero"></div>
+    <div class="list" id="list"></div>
+    <div class="footer">© Joury Restaurant</div>
+  </main>
+
+<script>
+  // صور الأقسام (محلية عندك بنفس الفولدر)
+  const HERO = {
+    breakfast: "breakfast.jpg",
+    salads:    "salads.jpg",
+    starters:  "starters.jpg",
+    mains:     "mains.jpg",
+    fish:      "fish.jpg",
+    home:      "home.jpg",
+    drinks:    "drinks.jpg",
+    shisha:    "shisha.jpg",
+    desserts:  "desserts.jpg"
+  };
+
+  let lang = "ar";
+  function T(obj){
+    if(!obj) return "";
+    if(typeof obj === "string") return obj;
+    if(lang==="he" && obj.he && obj.he.trim()) return obj.he;
+    return obj.ar || "";
+  }
+  function esc(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  const SECTIONS = [
+    // 1 فطور
+    {
+      id:"breakfast",
+      title:{ar:"فطور", he:"ארוחת בוקר"},
+      note:{ar:"فطور جوري — 80₪ (يشمل مشروب سخن فقط)", he:"ארוחת בוקר ג'ורי — 80₪ (כולל שתייה חמה בלבד)"},
+      items:[
+        { name:{ar:"فطور جوري", he:"ארוחת בוקר ג'ורי"}, price:"80₪", note:{ar:"يشمل مشروب سخن فقط.", he:"כולל שתייה חמה בלבד."} }
+      ]
+    },
+
+    // 2 سلطات (كاتيجوري لحال)
+    {
+      id:"salads",
+      title:{ar:"سلطات", he:"סלטים"},
+      note:{ar:"", he:""},
+      items:[
+        { name:{ar:"فتوش (صغير)", he:"פטוש (קטן)"}, price:"40₪" },
+        { name:{ar:"فتوش (كبير)", he:"פטוש (גדול)"}, price:"55₪" },
+        { name:{ar:"تبولة (صغير)", he:"טבולה (קטן)"}, price:"40₪" },
+        { name:{ar:"تبولة (كبير)", he:"טבולה (גדול)"}, price:"55₪" },
+        { name:{ar:"سلطة شنيتسل", he:"סלט שניצל"}, price:"55₪" },
+        { name:{ar:"سلطة القيصر", he:"סלט קיסר"}, price:"55₪" },
+        { name:{ar:"سلطة حلومي", he:"סלט חלומי"}, price:"55₪" },
+        { name:{ar:"سلطة توست", he:"סלט טוסט"}, price:"55₪" },
+        { name:{ar:"سلطة يونانية", he:"סלט יווני"}, price:"55₪" },
+        { name:{ar:"توست دجاج", he:"טוסט עוף"}, price:"55₪" },
+        { name:{ar:"تشكيلة سلطات للشخص", he:"מבחר סלטים לאדם"}, price:"40₪" }
+      ]
+    },
+
+    // 3 وجبات أولية
+    {
+      id:"starters",
+      title:{ar:"وجبات أولية", he:"מנות ראשונות"},
+      note:{ar:"", he:""},
+      items:[
+        { name:{ar:"فراطايش ممنتلة", he:"(نصححه لاحقاً)"}, price:"50₪" },
+        { name:{ar:"كلماري لبنة", he:"(נתקן אחר כך)"}, price:"80₪" },
+        { name:{ar:"مشكل معجنات", he:"(נתקן אחר כך)"}, price:"55₪" },
+        { name:{ar:"بطاطا", he:"צ'יפס"}, price:"20₪" },
+        { name:{ar:"كبة سلاطحين 6 حبات", he:"קובה 6 יח'"}, price:"40₪" },
+        { name:{ar:"كبة 6 حبات", he:"קובה 6 יח'"}, price:"40₪" }
+      ]
+    },
+
+    // 4 وجبات رئيسية
+    {
+      id:"mains",
+      title:{ar:"وجبات رئيسية", he:"מנות עיקריות"},
+      note:{ar:"(حسب المنيو) بعض الأصناف السعر حسب عدد الأشخاص", he:"(לפי התפריט) חלק מהמנות לפי מספר הסועדים"},
+      items:[
+        { name:{ar:"انتريكوت", he:"אנטריקוט"}, price:"110₪" },
+        { name:{ar:"فيليه", he:"פילה"}, price:"110₪" },
+        { name:{ar:"أضلاع خروف", he:"צלעות כבש"}, price:"110₪" },
+        { name:{ar:"مشكل مشاوي", he:"מיקס גריל"}, price:"110₪" },
+        { name:{ar:"سيخ خروف", he:"שיפוד כבש"}, price:"110₪" },
+        { name:{ar:"كباب", he:"קבב"}, price:"80₪" },
+        { name:{ar:"موزة خروف", he:"מוזת כבש"}, price:"120₪" },
+        { name:{ar:"ستيك توماهوك", he:"סטייק טומהוק"}, price:"200₪" },
+        { name:{ar:"دجاج", he:"עוף"}, price:"70₪" },
+        { name:{ar:"برجر", he:"בורגר"}, price:"60₪", note:{ar:"إضافة جبنة +10₪", he:"תוספת גבינה +10₪"} },
+        { name:{ar:"شنيتسل", he:"שניצל"}, price:"60₪", note:{ar:"عادي/حريف/زعتر", he:"רגיל/חריף/זעתר"} },
+        { name:{ar:"(سعر حسب عدد الأشخاص)", he:"(לפי מספר הסועדים)"}, price:"—" }
+      ]
+    },
+
+    // 5 أسماك
+    {
+      id:"fish",
+      title:{ar:"أسماك", he:"דגים"},
+      note:{ar:"كل الأصناف 90₪ (حسب المنيو)", he:"כל המנות 90₪ (לפי התפריט)"},
+      items:[
+        { name:{ar:"قريدس مقلي/مطبوخ", he:"שרימפס מטוגן/מבושל"}, price:"90₪" },
+        { name:{ar:"كلاماري مقلي/مطبوخ", he:"קלמרי מטוגן/מבושל"}, price:"90₪" },
+        { name:{ar:"مكس قريدس كلاماري مقلي/مطبوخ", he:"מיקס שרימפס קלמרי"}, price:"90₪" },
+        { name:{ar:"فواكه البحر - مطبوخ", he:"פירות ים - מבושל"}, price:"90₪" },
+        { name:{ar:"رؤوس كلاماري مقلي/مطبوخ", he:"ראשי קלמרי"}, price:"90₪" },
+        { name:{ar:"لڤراك مقلي/مشوي", he:"לברק מטוגן/על האש"}, price:"90₪" },
+        { name:{ar:"دنيس مقلي/مشوي", he:"דניס מטוגן/על האש"}, price:"90₪" },
+        { name:{ar:"سلمون", he:"סלמון"}, price:"90₪" }
+      ]
+    },
+
+    // 6 أكل بيتي
+    {
+      id:"home",
+      title:{ar:"أكل بيتي", he:"אוכל ביתי"},
+      note:{ar:"", he:""},
+      items:[
+        { name:{ar:"شوشبرك", he:"שושברק"}, price:"60₪", note:{ar:"إضافة رز 10₪", he:"תוספת אורז 10₪"} },
+        { name:{ar:"شيخ المحشي", he:"שייח' מחשי"}, price:"60₪", note:{ar:"إضافة رز 10₪", he:"תוספת אורז 10₪"} },
+        { name:{ar:"نصف كيلو دوالي", he:"חצי קילו דוואלי"}, price:"70₪" },
+        { name:{ar:"فخارة مع لحمة خروف", he:"פחארה עם כבש"}, price:"90₪" },
+        { name:{ar:"فخارة مع لحمة عجل", he:"פחארה עם עגל"}, price:"80₪" },
+        { name:{ar:"فخارة مع قريدس", he:"פחארה עם שרימפס"}, price:"90₪" },
+        { name:{ar:"جولش مع لحمة خروف", he:"גולש עם כבש"}, price:"80₪" },
+        { name:{ar:"جولش مع لحمة عجل", he:"גולש עם עגל"}, price:"80₪" },
+        { name:{ar:"مقلوبة", he:"מקלובה"}, price:"70₪" },
+        { name:{ar:"فوارغ + كرشتات (نصف كيلو)", he:"(חצי קילו)"}, price:"80₪" },
+        { name:{ar:"فوارغ + كرشتات (كيلو)", he:"(קילו)"}, price:"150₪" }
+      ]
+    },
+
+    // 7 مشروبات
+    {
+      id:"drinks",
+      title:{ar:"مشروبات", he:"משקאות"},
+      note:{ar:"باردة/مثلجة + ساخنة", he:"קר/קפוא + חם"},
+      items:[
+        { name:{ar:"موخيتو", he:"מוחיטו"}, price:"24₪" },
+        { name:{ar:"برتقال", he:"תפוז"}, price:"18₪" },
+        { name:{ar:"جزر", he:"גזר"}, price:"18₪" },
+        { name:{ar:"تفاح", he:"תפוח"}, price:"18₪" },
+        { name:{ar:"ليمونادا", he:"לימונדה"}, price:"18₪" },
+        { name:{ar:"جروس", he:"גרוס"}, price:"18₪" },
+        { name:{ar:"مكس جزر وبرتقال", he:"מיקס גזר תפוז"}, price:"24₪" },
+        { name:{ar:"ملك شيك", he:"מילקשייק"}, price:"24₪" },
+        { name:{ar:"أيس كافيه", he:"אייס קפה"}, price:"18₪" },
+        { name:{ar:"بسفلورا", he:"פסיפלורה"}, price:"18₪" },
+
+        { name:{ar:"أسبريسو", he:"אספרסו"}, price:"10₪" },
+        { name:{ar:"هفوق", he:"הפוך"}, price:"18₪" },
+        { name:{ar:"نسكافيه", he:"נסקפה"}, price:"18₪" },
+        { name:{ar:"شاي", he:"תה"}, price:"10₪" },
+        { name:{ar:"شوكو", he:"שוקו"}, price:"18₪" },
+        { name:{ar:"سحلب", he:"סחלב"}, price:"18₪" }
+      ]
+    },
+
+    // 8 أراجيل
+    {
+      id:"shisha",
+      title:{ar:"أراجيل", he:"נרגילות"},
+      note:{ar:"تفاحتين / نخلة / بوبيري / ليمون نعنع / بطيخ / خلطة", he:""},
+      items:[
+        { name:{ar:"فرش", he:"פרש"}, price:"50₪" },
+        { name:{ar:"عادي", he:"רגיל"}, price:"40₪" }
+      ]
+    },
+
+    // 9 حلويات
+    {
+      id:"desserts",
+      title:{ar:"حلويات", he:"מתוקים"},
+      note:{ar:"", he:""},
+      items:[
+        { name:{ar:"سوفليه", he:"סופלה"}, price:"40₪" },
+        { name:{ar:"الفاخورس", he:"אלפחורס"}, price:"40₪" },
+        { name:{ar:"كعكة جبنة", he:"עוגת גבינה"}, price:"40₪" },
+        { name:{ar:"كعكة ريد فلفيت", he:"רד וולווט"}, price:"40₪" },
+        { name:{ar:"كريب", he:"קרפ"}, price:"45₪" },
+        { name:{ar:"وافل بلجي", he:"וופל בלגי"}, price:"45₪" },
+        { name:{ar:"بانكيك", he:"פנקייק"}, price:"45₪" }
+      ]
+    }
+  ];
+
+  const tabs = document.getElementById("tabs");
+  const hero = document.getElementById("hero");
+  const list = document.getElementById("list");
+  const pageTitle = document.getElementById("pageTitle");
+  const pageSub = document.getElementById("pageSub");
+  const btnAr = document.getElementById("btnAr");
+  const btnHe = document.getElementById("btnHe");
+
+  let current = SECTIONS[0].id;
+
+  function setLang(newLang){
+    lang = newLang;
+    btnAr.classList.toggle("active", lang==="ar");
+    btnHe.classList.toggle("active", lang==="he");
+    document.documentElement.lang = (lang==="ar") ? "ar" : "he";
+    document.documentElement.dir = "rtl"; // الاثنين RTL
+    pageTitle.textContent = (lang==="ar") ? "Joury Restaurant" : "מסעדת ג'ורי";
+    pageSub.textContent = (lang==="ar") ? "Digital Menu" : "תפריט דיגיטלי";
+    renderTabs();
+    renderSection();
+  }
+
+  function renderTabs(){
+    tabs.innerHTML = "";
+    SECTIONS.forEach(sec=>{
+      const b = document.createElement("button");
+      b.className = "tab" + (sec.id===current ? " active" : "");
+      b.textContent = T(sec.title);
+      b.onclick = ()=>{
+        current = sec.id;
+        renderTabs();
+        renderSection();
+        window.scrollTo({top:0, behavior:"smooth"});
+      };
+      tabs.appendChild(b);
+    });
+  }
+
+  function renderSection(){
+    const sec = SECTIONS.find(s=>s.id===current);
+
+    hero.innerHTML = `
+      <img src="${esc(HERO[sec.id])}" alt="">
+      <div class="heroTitle">
+        <h2>${esc(T(sec.title))}</h2>
+        <p class="note">${esc(T(sec.note))}</p>
+      </div>
+    `;
+
+    list.innerHTML = sec.items.map(it=>`
+      <div class="row">
+        <div>
+          <p class="itemName">${esc(T(it.name))}</p>
+          ${it.note ? `<p class="itemNote">${esc(T(it.note))}</p>` : ``}
+        </div>
+        <div class="price">${esc(it.price)}</div>
+      </div>
+    `).join("");
+  }
+
+  // start
+  renderTabs();
+  renderSection();
+</script>
+
+</body>
+</html>
